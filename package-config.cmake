@@ -154,6 +154,13 @@ if(_PKG_CONFIG_REQUIRES)
   endforeach()
   list(REMOVE_DUPLICATES _PKG_CONFIG_REQUIRES_LIST)
 endif(_PKG_CONFIG_REQUIRES)
+
+if(NOT ${PROJECT_NAME}_ZERO_TARGET)
+  SET(EXPR_PROJECT_NAME_ZERO_TARGET "SET(${PROJECT_NAME}_ZERO_TARGET FALSE)")  
+else()
+  SET(EXPR_PROJECT_NAME_ZERO_TARGET "SET(${PROJECT_NAME}_ZERO_TARGET TRUE)")
+endif()
+
 configure_package_config_file(
     "cmake/Config.cmake.in"
     "${PROJECT_CONFIG}"
@@ -170,11 +177,14 @@ install(
 
 # Config
 #   * <prefix>/lib/cmake/Foo/FooTargets.cmake
-install(
+if(NOT ${PROJECT_NAME}_ZERO_TARGET)
+  install(
     EXPORT "${TARGETS_EXPORT_NAME}"
     NAMESPACE "${namespace}"
     DESTINATION "${CONFIG_INSTALL_DIR}"
-)
+    )
+endif()
+
 ENDMACRO(SETUP_PROJECT_PACKAGE_FINALIZE)
 
 #.rst:
